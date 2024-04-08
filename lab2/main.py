@@ -7,13 +7,15 @@ def __main__():
     a = 742938285
     seed = 2137
     numberOfRanges = 10
+    p = 10
+    q = 3
 
     # task 1
     randomSequenceLinear = linearGenerator(a, 0, M, seed, N)
     splitAndCount(randomSequenceLinear, numberOfRanges, M//numberOfRanges)
     drawPlot(randomSequenceLinear, 1000)
     # task 2
-    randomSequenceRegister = shiftRegisterGenerator(seed, N)
+    randomSequenceRegister = shiftRegisterGenerator(seed, N, p, q)
     splitAndCount(randomSequenceRegister, 2, 1)
     drawPlot(randomSequenceRegister, 2)
     return 0
@@ -30,21 +32,20 @@ def drawPlot(data: list, bins: int):
     plt.title("Linear Generator")
     plt.show()
 
-def shiftRegisterGenerator(seed: int, length: int) -> list:
-    # for p = 2 and q = 1
+def shiftRegisterGenerator(seed: int, length: int, p: int, q: int) -> list:
     if length <= 0:
         return None
     
-    p = 3
-    q = 1
     seed = list(map(int, bin(seed)[2:]))    # skip '0b' prefix
+    if len(seed) < p:
+        seed = seed + seed
     randomSequence = []
     
     for i in range(length):
         if(i<p):
             randomSequence.append(seed[i])
         else: 
-            randomSequence.append(randomSequence[-1] ^ randomSequence[-3])
+            randomSequence.append(randomSequence[i-p] ^ randomSequence[i-q])
            # print(randomSequence[-1])
 
     return randomSequence
